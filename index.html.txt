@@ -29,7 +29,7 @@
       flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
       color: #f0f6fc;
     }
     .live-indicator {
@@ -55,15 +55,29 @@
       font-size: 20px;
       font-weight: 900;
       color: #58a6ff;
-      letter-spacing: 0.5px;
       font-family: monospace;
+    }
+    .manual-box {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .manual-box input {
+      width: 95px;
+      padding: 5px 8px;
+      border-radius: 4px;
+      border: 1px solid #30363d;
+      background: #0d1117;
+      color: #fff;
+      font-size: 12px;
+      font-weight: bold;
     }
     .btn-group {
       display: flex;
       gap: 8px;
     }
     .btn {
-      padding: 6px 14px;
+      padding: 6px 12px;
       border-radius: 6px;
       font-size: 12px;
       font-weight: 700;
@@ -71,18 +85,18 @@
       border: 1px solid transparent;
       transition: all 0.2s;
     }
+    .btn-apply {
+      background: #1f6feb;
+      color: #ffffff;
+      border-color: #388bfd;
+    }
+    .btn-apply:hover { background: #388bfd; }
     .btn-print {
       background: #238636;
       color: #ffffff;
       border-color: #2ea043;
     }
     .btn-print:hover { background: #2ea043; }
-    .btn-refresh {
-      background: #21262d;
-      color: #c9d1d9;
-      border-color: #30363d;
-    }
-    .btn-refresh:hover { background: #30363d; color: #fff; }
 
     /* PAPER TERMINAL (EXACT A4 PROPORTIONS) */
     .sheet-wrapper {
@@ -294,7 +308,6 @@
     .footer-left { display: table-cell; }
     .footer-right { display: table-cell; text-align: right; }
 
-    /* EXACT PDF PRINT STYLING */
     @media print {
       body { background: #ffffff !important; padding: 0 !important; }
       .control-bar { display: none !important; }
@@ -310,20 +323,25 @@
 </head>
 <body>
 
-  <!-- TOP BAR -->
+  <!-- CONTROL BAR -->
   <div class="control-bar">
     <div class="live-indicator">
       <div class="dot"></div>
-      <span>RR MULTI TRADING FEED: <span id="status-label">ACTIVE CONNECTED</span></span>
+      <span>RR MULTI TRADING FEED: <span id="status-label">INITIALIZED</span></span>
     </div>
-    <div class="price-display">XAUUSD: $<span id="live-price">---.--</span></div>
+    <div class="price-display">XAUUSD: $<span id="live-price">4168.50</span></div>
+    
+    <div class="manual-box">
+      <input type="number" id="custom-price" placeholder="Set Price" step="0.5">
+      <button class="btn btn-apply" onclick="applyCustomPrice()">Apply</button>
+    </div>
+
     <div class="btn-group">
-      <button class="btn btn-refresh" onclick="fetchLiveGold()">Sync Live Price</button>
       <button class="btn btn-print" onclick="window.print()">Download / Save PDF</button>
     </div>
   </div>
 
-  <!-- A4 REPORT SHEET -->
+  <!-- A4 SHEET -->
   <div class="sheet-wrapper">
     <table class="header-table">
       <tr>
@@ -334,14 +352,14 @@
         <td class="date-meta">
           <div class="tag-badge" id="regime-badge">Live Scanner</div>
           <div style="margin-top: 2px; font-weight: 800; color: #1f2328;" id="live-date">---</div>
-          <div style="color: #57606a; font-size: 7pt;">Live Spot: <strong id="sheet-price">$---.--</strong> • Bold Edition</div>
+          <div style="color: #57606a; font-size: 7pt;">Live Spot: <strong id="sheet-price">$4,168.50</strong> • Bold Edition</div>
         </td>
       </tr>
     </table>
 
     <div class="status-banner">
-      <div class="status-title">Active Market Regime (<span id="regime-time">Live Calculation</span> • Dynamic Baseline)</div>
-      <div class="status-val" id="regime-text">DYNAMIC LIQUIDITY SCANNER ACTIVE • RECALCULATING AGAINST 200-DAY EMA ($4,075.00–$4,085.00)</div>
+      <div class="status-title">Active Market Regime (<span id="regime-time">Live Engine</span> • Dynamic Baseline)</div>
+      <div class="status-val" id="regime-text">CONFIRMED 200-DAY EMA DOUBLE BOTTOM ($4,066.00 & $4,073.00) • MEAN REVERSION SQUEEZE ACTIVE</div>
     </div>
 
     <div class="horizon-grid">
@@ -366,31 +384,31 @@
     <div class="setup-grid">
       <div class="setup-card primary">
         <div class="setup-header" style="color: #1a7f37;">Setup A: Long (Shelf Pullback) <span class="badge badge-bull">Primary</span></div>
-        <div class="setup-row"><div class="setup-label">Entry Zone:</div><div class="setup-value price-bold-green" id="a-entry">$--- –$---</div></div>
-        <div class="setup-row"><div class="setup-label">Stop Loss:</div><div class="setup-value price-bold-red" id="a-sl">$---</div></div>
-        <div class="setup-row"><div class="setup-label">Target 1 (TP1):</div><div class="setup-value price-bold-blue" id="a-tp1">$---</div></div>
-        <div class="setup-row"><div class="setup-label">Target 2 (TP2):</div><div class="setup-value price-bold-blue" id="a-tp2">$---</div></div>
-        <div class="setup-row"><div class="setup-label">Target 3 (TP3):</div><div class="setup-value price-bold-blue" id="a-tp3">$---</div></div>
+        <div class="setup-row"><div class="setup-label">Entry Zone:</div><div class="setup-value price-bold-green" id="a-entry">$4,154.00 – $4,164.00</div></div>
+        <div class="setup-row"><div class="setup-label">Stop Loss:</div><div class="setup-value price-bold-red" id="a-sl">$4,142.00</div></div>
+        <div class="setup-row"><div class="setup-label">Target 1 (TP1):</div><div class="setup-value price-bold-blue" id="a-tp1">$4,188.00</div></div>
+        <div class="setup-row"><div class="setup-label">Target 2 (TP2):</div><div class="setup-value price-bold-blue" id="a-tp2">$4,205.00</div></div>
+        <div class="setup-row"><div class="setup-label">Target 3 (TP3):</div><div class="setup-value price-bold-blue" id="a-tp3">$4,235.00</div></div>
         <div class="setup-row"><div class="setup-label">Risk : Reward:</div><div class="setup-value price-bold-gold">1 : 3.4 (to TP2)</div></div>
       </div>
 
       <div class="setup-card breakout">
         <div class="setup-header" style="color: #0969da;">Setup B: Long (Breakout Reclaim) <span class="badge badge-breakout">Momentum</span></div>
-        <div class="setup-row"><div class="setup-label">Entry Trigger:</div><div class="setup-value price-bold-blue" id="b-entry">15M Close > $---</div></div>
-        <div class="setup-row"><div class="setup-label">Stop Loss:</div><div class="setup-value price-bold-red" id="b-sl">$---</div></div>
-        <div class="setup-row"><div class="setup-label">Target 1 (TP1):</div><div class="setup-value price-bold-green" id="b-tp1">$---</div></div>
-        <div class="setup-row"><div class="setup-label">Target 2 (TP2):</div><div class="setup-value price-bold-green" id="b-tp2">$---</div></div>
-        <div class="setup-row"><div class="setup-label">Target 3 (TP3):</div><div class="setup-value price-bold-green" id="b-tp3">$---</div></div>
+        <div class="setup-row"><div class="setup-label">Entry Trigger:</div><div class="setup-value price-bold-blue" id="b-entry">15M Close > $4,178.00</div></div>
+        <div class="setup-row"><div class="setup-label">Stop Loss:</div><div class="setup-value price-bold-red" id="b-sl">$4,162.00</div></div>
+        <div class="setup-row"><div class="setup-label">Target 1 (TP1):</div><div class="setup-value price-bold-green" id="b-tp1">$4,198.00</div></div>
+        <div class="setup-row"><div class="setup-label">Target 2 (TP2):</div><div class="setup-value price-bold-green" id="b-tp2">$4,215.00</div></div>
+        <div class="setup-row"><div class="setup-label">Target 3 (TP3):</div><div class="setup-value price-bold-green" id="b-tp3">$4,248.00</div></div>
         <div class="setup-row"><div class="setup-label">Risk : Reward:</div><div class="setup-value price-bold-gold">1 : 2.7 (to TP2)</div></div>
       </div>
 
       <div class="setup-card hedge">
         <div class="setup-header" style="color: #cf222e;">Setup C: Short (Overhead Fade) <span class="badge badge-bear">Fade</span></div>
-        <div class="setup-row"><div class="setup-label">Entry Zone:</div><div class="setup-value price-bold-red" id="c-entry">$--- –$---</div></div>
-        <div class="setup-row"><div class="setup-label">Stop Loss:</div><div class="setup-value price-bold-red" id="c-sl">$---</div></div>
-        <div class="setup-row"><div class="setup-label">Target 1 (TP1):</div><div class="setup-value price-bold-green" id="c-tp1">$---</div></div>
-        <div class="setup-row"><div class="setup-label">Target 2 (TP2):</div><div class="setup-value price-bold-green" id="c-tp2">$---</div></div>
-        <div class="setup-row"><div class="setup-label">Target 3 (TP3):</div><div class="setup-value price-bold-green" id="c-tp3">$---</div></div>
+        <div class="setup-row"><div class="setup-label">Entry Zone:</div><div class="setup-value price-bold-red" id="c-entry">$4,205.00 – $4,218.00</div></div>
+        <div class="setup-row"><div class="setup-label">Stop Loss:</div><div class="setup-value price-bold-red" id="c-sl">$4,230.00</div></div>
+        <div class="setup-row"><div class="setup-label">Target 1 (TP1):</div><div class="setup-value price-bold-green" id="c-tp1">$4,175.00</div></div>
+        <div class="setup-row"><div class="setup-label">Target 2 (TP2):</div><div class="setup-value price-bold-green" id="c-tp2">$4,152.00</div></div>
+        <div class="setup-row"><div class="setup-label">Target 3 (TP3):</div><div class="setup-value price-bold-green" id="c-tp3">$4,120.00</div></div>
         <div class="setup-row"><div class="setup-label">Risk : Reward:</div><div class="setup-value price-bold-gold">1 : 3.2 (to TP2)</div></div>
       </div>
     </div>
@@ -428,9 +446,9 @@
           </tr>
           <tr>
             <td><strong>Current Spot Auction Base</strong></td>
-            <td class="price-bold-blue" id="m-lvl-4">$---</td>
-            <td>Live Price Compression</td>
-            <td>Active price discovery zone; basis for intraday volatility expansion.</td>
+            <td class="price-bold-blue" id="m-lvl-4">$4,162.00 – $4,175.00</td>
+            <td>Live Price Discovery</td>
+            <td>Active auction base above the 200 EMA double bottom.</td>
           </tr>
           <tr>
             <td><strong>Terminal Double-Bottom Base</strong></td>
@@ -477,22 +495,6 @@
   </div>
 
   <script>
-    async function fetchLiveGold() {
-      const statusLabel = document.getElementById("status-label");
-      try {
-        statusLabel.innerText = "UPDATING...";
-        const res = await fetch("https://gold-api.com/api/XAU");
-        const data = await res.json();
-        if (data && data.price) {
-          updateMatrix(parseFloat(data.price));
-          statusLabel.innerText = "ACTIVE LIVE STREAM";
-        }
-      } catch (err) {
-        updateMatrix(4170.00);
-        statusLabel.innerText = "SESSION CACHED";
-      }
-    }
-
     function updateMatrix(price) {
       const p = Math.round(price * 100) / 100;
 
@@ -500,53 +502,56 @@
       document.getElementById("sheet-price").innerText = "$" + p.toFixed(2);
       document.getElementById("live-date").innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
 
-      // Setup A (Pullback Long)
-      const aEntryLow = (p - 14).toFixed(2);
-      const aEntryHigh = (p - 6).toFixed(2);
-      const aSL = (p - 26).toFixed(2);
-      const aTP1 = (p + 18).toFixed(2);
-      const aTP2 = (p + 35).toFixed(2);
-      const aTP3 = (p + 65).toFixed(2);
+      // Dynamic Setup Calculations
+      document.getElementById("a-entry").innerText = `$${(p - 14).toFixed(2)} – $${(p - 4).toFixed(2)}`;
+      document.getElementById("a-sl").innerText = `$${(p - 26).toFixed(2)}`;
+      document.getElementById("a-tp1").innerText = `$${(p + 19).toFixed(2)}`;
+      document.getElementById("a-tp2").innerText = `$${(p + 36).toFixed(2)}`;
+      document.getElementById("a-tp3").innerText = `$${(p + 66).toFixed(2)}`;
 
-      document.getElementById("a-entry").innerText = `$${aEntryLow} – $${aEntryHigh}`;
-      document.getElementById("a-sl").innerText = `$${aSL}`;
-      document.getElementById("a-tp1").innerText = `$${aTP1}`;
-      document.getElementById("a-tp2").innerText = `$${aTP2}`;
-      document.getElementById("a-tp3").innerText = `$${aTP3}`;
+      document.getElementById("b-entry").innerText = `15M Close > $${(p + 9).toFixed(2)}`;
+      document.getElementById("b-sl").innerText = `$${(p - 7).toFixed(2)}`;
+      document.getElementById("b-tp1").innerText = `$${(p + 29).toFixed(2)}`;
+      document.getElementById("b-tp2").innerText = `$${(p + 46).toFixed(2)}`;
+      document.getElementById("b-tp3").innerText = `$${(p + 79).toFixed(2)}`;
 
-      // Setup B (Breakout Long)
-      const bTrigger = (p + 8).toFixed(2);
-      const bSL = (p - 8).toFixed(2);
-      const bTP1 = (p + 28).toFixed(2);
-      const bTP2 = (p + 45).toFixed(2);
-      const bTP3 = (p + 75).toFixed(2);
+      document.getElementById("c-entry").innerText = `$${(p + 36).toFixed(2)} – $${(p + 49).toFixed(2)}`;
+      document.getElementById("c-sl").innerText = `$${(p + 61).toFixed(2)}`;
+      document.getElementById("c-tp1").innerText = `$${(p + 6).toFixed(2)}`;
+      document.getElementById("c-tp2").innerText = `$${(p - 17).toFixed(2)}`;
+      document.getElementById("c-tp3").innerText = `$${(p - 49).toFixed(2)}`;
 
-      document.getElementById("b-entry").innerText = `15M Close > $${bTrigger}`;
-      document.getElementById("b-sl").innerText = `$${bSL}`;
-      document.getElementById("b-tp1").innerText = `$${bTP1}`;
-      document.getElementById("b-tp2").innerText = `$${bTP2}`;
-      document.getElementById("b-tp3").innerText = `$${bTP3}`;
-
-      // Setup C (Overhead Fade Short)
-      const cEntryLow = (p + 35).toFixed(2);
-      const cEntryHigh = (p + 48).toFixed(2);
-      const cSL = (p + 60).toFixed(2);
-      const cTP1 = (p + 5).toFixed(2);
-      const cTP2 = (p - 18).toFixed(2);
-      const cTP3 = (p - 50).toFixed(2);
-
-      document.getElementById("c-entry").innerText = `$${cEntryLow} – $${cEntryHigh}`;
-      document.getElementById("c-sl").innerText = `$${cSL}`;
-      document.getElementById("c-tp1").innerText = `$${cTP1}`;
-      document.getElementById("c-tp2").innerText = `$${cTP2}`;
-      document.getElementById("c-tp3").innerText = `$${cTP3}`;
-
-      // Road Map Spot Auction
       document.getElementById("m-lvl-4").innerText = `$${(p - 6).toFixed(2)} – $${(p + 6).toFixed(2)}`;
     }
 
+    function applyCustomPrice() {
+      const val = parseFloat(document.getElementById("custom-price").value);
+      if (!isNaN(val) && val > 0) {
+        updateMatrix(val);
+        document.getElementById("status-label").innerText = "MANUAL INPUT CALIBRATED";
+      }
+    }
+
+    async function fetchLiveGold() {
+      const statusLabel = document.getElementById("status-label");
+      try {
+        const res = await fetch("https://gold-api.com/api/XAU");
+        const data = await res.json();
+        if (data && data.price) {
+          updateMatrix(parseFloat(data.price));
+          statusLabel.innerText = "ACTIVE LIVE FEED";
+          return;
+        }
+      } catch (e) {
+        // Fallback default
+        updateMatrix(4168.50);
+        statusLabel.innerText = "DEFAULT BASELINE";
+      }
+    }
+
+    // Initialize immediately
+    updateMatrix(4168.50);
     fetchLiveGold();
-    setInterval(fetchLiveGold, 30000);
   </script>
 </body>
 </html>
